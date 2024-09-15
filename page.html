@@ -5,12 +5,57 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="stylesheet" href="">
 	<style>
+#photobutton {
+	display: none;
+}
+
+#submit {
+	display: none;
+}
+
+#form {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+#l-photobutton {
+	height: 10vh;
+	width: 90vw;
+	background-color: blue;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#l-submit {
+	height: 10vh;
+	width: 90vw;
+	background-color: red;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#comment {
+	height: 10vh;
+	width: 90vw;
+	margin: 0px;
+}
 	</style>
 	<body>
-		<form action="/" method="post" enctype="multipart/form-data">
-			<input name="photo" type="file" accept="image/*" capture="camera">
-			<textarea name="comment"></textarea>
-			<input type="submit">
+		<form id="form" action="/" method="post" enctype="multipart/form-data">
+			<input id="photobutton" name="photo" type="file" accept="image/*" capture="camera" onchange="setTimeout(() => {document.getElementById('comment').focus();}, 100);">
+			<!-- setTimeout here is necessary to make sure that the keyboard
+				actually shows up on mobile devices
+				I hate javascript
+			-->
+			<label id="l-photobutton" for="photobutton">+</label>
+			<textarea id="comment" name="comment" placeholder="Add comment..."></textarea>
+			<input id="submit" type="submit">
+			<label id="l-submit" for="submit">send</label>
 		</form>
 		<div class="things">
 			__THINGS__

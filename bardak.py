@@ -92,9 +92,10 @@ class Server(BaseHTTPRequestHandler):
                     extract_file_content(part)
                     )
             
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b'file uploaded.')
+        #self.send_response(200)
+        #self.end_headers()
+        #self.wfile.write(b'file uploaded.')
+        return self._serve_index()
 
 if __name__ == "__main__":
     server = HTTPServer(("0.0.0.0", 8000), Server)
