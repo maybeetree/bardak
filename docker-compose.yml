@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  bardak:
+    build: .
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./things:/app/things:rw
+    read_only: true
+    tmpfs:
+      - /tmp
+    environment:
+      - PYTHONUNBUFFERED=1
+
