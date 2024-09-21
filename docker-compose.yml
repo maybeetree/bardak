@@ -12,4 +12,5 @@ services:
       - /tmp
     environment:
       - PYTHONUNBUFFERED=1
+    restart: unless-stopped
 

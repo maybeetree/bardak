@@ -31,6 +31,10 @@ class Server(BaseHTTPRequestHandler):
     def _serve_image(self):
         self.send_response(200)
         #self.send_header("Content-Type", "text/html")
+
+        # Tell the browser to cached the image
+        self.send_header("Cache-Control", "max-age=31536000, immutable")
+
         self.end_headers()
         # Directory traversal vulnerability right here
         self.wfile.write(
