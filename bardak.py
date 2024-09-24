@@ -1,4 +1,5 @@
 
+import shutil
 from pathlib import Path
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -62,12 +63,23 @@ class Server(BaseHTTPRequestHandler):
                             b'__COMMENT__',
                             image.with_suffix('.txt').read_bytes()
                             )
+                        .replace(
+                            b'__ID__',
+                            image.stem.encode('ascii')
+                            )
                     for image in images
                     ))
                 )
             )
 
     def do_POST(self):
+        if self.path == '/':
+            return self._add_thing()
+
+        elif self.path.startswith('/delete'):
+            return self._delete_thing()
+
+    def _add_thing(self):
         now = int(time.time())
 
         content_length = int(self.headers.get("Content-Length", 0))
@@ -100,6 +112,22 @@ class Server(BaseHTTPRequestHandler):
         #self.end_headers()
         #self.wfile.write(b'file uploaded.')
         return self._serve_index()
+    
+    def _delete_thing(self):
+        thing = self.path.lstrip('/delete').rstrip('/')
+        try:
+            for path in Path('things').glob(f'{thing}*'):
+                shutil.move(
+                    path,
+                    Path('trash') / path.name
+                    )
+            return self._serve_index()
+        except:
+            self.send_response(400)
+            self.send_header("Content-Type", "text/plain")
+            self.end_headers()
+            self.wfile.write(b'Error.')
+
 
 if __name__ == "__main__":
     server = HTTPServer(("0.0.0.0", 8085), Server)
