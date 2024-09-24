@@ -10,5 +10,9 @@ dist
 *.old
 *.log
 
-things
+things/*
+!things/.git-keep-me
+trash/*
+!trash/.git-keep-me
+
 
