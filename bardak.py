@@ -70,7 +70,7 @@ class Server(BaseHTTPRequestHandler):
                             b'__ID__',
                             image.stem.encode('ascii')
                             )
-                    for image in images
+                    for image in sorted(images, reverse=True)
                     ))
                 )
             )
