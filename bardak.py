@@ -1,4 +1,5 @@
 
+import html
 import shutil
 from pathlib import Path
 import time
@@ -61,7 +62,9 @@ class Server(BaseHTTPRequestHandler):
                         .replace(b'__IMAGE__', str(image).encode('ascii'))
                         .replace(
                             b'__COMMENT__',
-                            image.with_suffix('.txt').read_bytes()
+                            html.escape(
+                                image.with_suffix('.txt').read_text()
+                                ).encode('utf-8')
                             )
                         .replace(
                             b'__ID__',
