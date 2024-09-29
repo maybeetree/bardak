@@ -1,7 +1,8 @@
 <img src="/__IMAGE__" width="200px">
-<p>
-__COMMENT__
-</p>
+<form action="/update/__ID__" method="post" enctype="multipart/form-data">
+	<textarea name="comment">__COMMENT__</textarea>
+	<input type="submit" value="update">
+</form>
 <form action="/delete/__ID__" method="post">
 	<input type="submit" value="delete">
 </form>

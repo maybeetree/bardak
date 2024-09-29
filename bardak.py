@@ -52,6 +52,7 @@ class Server(BaseHTTPRequestHandler):
             image
             for image in Path('things').glob('*')
             if image.suffix != '.txt'
+                and not image.name.startswith('.')
             )
 
         self.wfile.write(
@@ -78,6 +79,9 @@ class Server(BaseHTTPRequestHandler):
     def do_POST(self):
         if self.path == '/':
             return self._add_thing()
+
+        elif self.path.startswith('/update'):
+            return self._update_thing()
 
         elif self.path.startswith('/delete'):
             return self._delete_thing()
@@ -114,6 +118,27 @@ class Server(BaseHTTPRequestHandler):
         #self.send_response(200)
         #self.end_headers()
         #self.wfile.write(b'file uploaded.')
+        return self._serve_index()
+    
+    def _update_thing(self):
+
+        thing = self.path.lstrip('/update').rstrip('/')
+
+        content_length = int(self.headers.get("Content-Length", 0))
+        post_data = self.rfile.read(content_length)
+
+        # Parse the data manually
+        boundary = self.headers['Content-Type'].split('=')[1].encode()
+        parts = post_data.split(boundary)
+        
+        for part in parts:
+            if b'name="comment"' in part:
+                Path(f"things/{thing}.txt").write_bytes(
+                    extract_file_content(part)
+                    .replace(b'\r\n', b'\n')
+                    )
+                break
+
         return self._serve_index()
     
     def _delete_thing(self):
