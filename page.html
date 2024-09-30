@@ -1,64 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 	<meta charset="UTF-8">
-	<title>Page Title</title>
+	<title>Bardak</title>
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<link rel="stylesheet" href="">
+	<script>
+function focusCommentBox() {
+	setTimeout(
+		() => {
+			document.getElementById('comment').focus();
+			/*
+			 * setTimeout here is necessary to make sure that the keyboard
+			 * actually shows up on mobile devices
+			 * I hate javascript
+			 */
+		},
+		100
+		);
+}
+	</script>
+
 	<style>
-#photobutton {
-	display: none;
+
+* {    
+	box-sizing: border-box;    
 }
 
-#submit {
-	display: none;
+body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#main {
+	width: 100%;
+	max-width: 1000px;
 }
 
 #form {
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: 10px;
+	width: 100%;
+	background-color: lightgray;
+	padding: 10px;
+}
+
+#photobutton, #submit {
+	display: none;
+}
+
+#l-photobutton, #l-submit, #comment {
+	height: 10vh;
+	width: 100%;
+	margin: 0px;
+}
+
+label {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 #l-photobutton {
-	height: 10vh;
-	width: 90vw;
 	background-color: blue;
 	color: white;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 }
 
 #l-submit {
-	height: 10vh;
-	width: 90vw;
 	background-color: red;
 	color: white;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 }
 
-#comment {
-	height: 10vh;
-	width: 90vw;
-	margin: 0px;
+.things {
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	gap: 20px;
+	margin-top: 50px;
 }
+
+.thing {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	height: 250px;
+	background-color: lightgray;
+}
+
+@media screen and (orientation:portrait) {
+	.thing {
+		flex-direction: column;
+		height: fit-content;
+	}
+}
+
+.thing > * {
+	flex-grow: 1;
+	flex-shrink: 1;
+}
+
+.delbox {
+	flex-grow: 0;
+	height: 100%;
+	width: 80px;
+	/*aspect-ratio: 1 / 1;*/
+}
+
+.thingimage {
+	object-fit: contain;
+	flex-grow: 0;
+	flex-shrink: 0;
+	/*max-width: 50%;*/
+	width: 50%;
+	margin: 10px;
+}
+
+@media screen and (orientation:portrait) {
+	.thingimage {
+		height: 150px;
+		width: auto;
+	}
+}
+
+.updatebox, .delbox {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 10px;
+}
+
+.updatelabel {
+	background-color: green;
+	color: white;
+	padding: 10px;
+}
+
+.dellabel {
+	background-color: red;
+	height: 100%;
+}
+
+.updatebutton, .delbutton {
+	display: none;
+}
+
+.updatebox > textarea {
+	flex-grow: 1;
+	flex-shrink: 1;
+}
+
 	</style>
 	<body>
-		<form id="form" action="/" method="post" enctype="multipart/form-data">
-			<input id="photobutton" name="photo" type="file" accept="image/*" capture="camera" onchange="setTimeout(() => {document.getElementById('comment').focus();}, 100);">
-			<!-- setTimeout here is necessary to make sure that the keyboard
-				actually shows up on mobile devices
-				I hate javascript
-			-->
-			<label id="l-photobutton" for="photobutton">+</label>
-			<textarea id="comment" name="comment" placeholder="Add comment..."></textarea>
-			<input id="submit" type="submit">
-			<label id="l-submit" for="submit">send</label>
-		</form>
-		<div class="things">
-			__THINGS__
+		<div id="main">
+			<form
+					id="form"
+					action="/"
+					method="post"
+					enctype="multipart/form-data"
+					>
+
+				<input
+					id="photobutton"
+					name="photo"
+					type="file"
+					accept="image/*"
+					capture="camera"
+					onchange="focusCommentBox();">
+				<label id="l-photobutton" for="photobutton">+</label>
+
+				<textarea
+					id="comment"
+					name="comment"
+					placeholder="Add comment..."
+					></textarea>
+
+				<input id="submit" type="submit">
+				<label id="l-submit" for="submit">send</label>
+
+			</form>
+			<div class="things">
+				__THINGS__
+			</div>
 		</div>
 	</body>
 </html> 
