@@ -1,5 +1,5 @@
 <div class="thing">
-	<img class="thingimage" src="/__IMAGE__" width="200px">
+	<img class="thingimage" src="/__IMAGE__">
 	<form
 			action="/update/__ID__"
 			method="post"
@@ -7,7 +7,7 @@
 			class="updatebox"
 			>
 		<textarea name="comment">__COMMENT__</textarea>
-		<input class="updatebutton" type="submit" value="update">
+		<input id="update-__ID__" class="updatebutton" type="submit" value="update">
 		<label for="update-__ID__" class="updatelabel">Update</label>
 	</form>
 
