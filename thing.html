@@ -5,13 +5,14 @@
 			method="post"
 			enctype="multipart/form-data"
 			class="updatebox"
+			target="operation-response"
 			>
 		<textarea name="comment">__COMMENT__</textarea>
 		<input id="update-__ID__" class="updatebutton" type="submit" value="update">
 		<label for="update-__ID__" class="updatelabel">Update</label>
 	</form>
 
-	<form class="delbox" action="/delete/__ID__" method="post">
+	<form class="delbox" action="/delete/__ID__" method="post" target="operation-response">
 		<input type="submit" value="delete" id="delete-__ID__" class="delbutton">
 		<label for="delete-__ID__" class="dellabel">🚮</label>
 	</form>

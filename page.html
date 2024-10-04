@@ -71,7 +71,7 @@ label {
 	color: white;
 }
 
-.things {
+#things {
 	display: flex;
 	width: 100%;
 	flex-direction: column;
@@ -149,6 +149,14 @@ label {
 	flex-shrink: 1;
 }
 
+#operation-response {
+	position: sticky;
+	width: 100%;
+	bottom: 0px;
+	height: 50px;
+	background-color: white;
+}
+
 	</style>
 	<body>
 		<div id="main">
@@ -178,9 +186,11 @@ label {
 				<label id="l-submit" for="submit">send</label>
 
 			</form>
-			<div class="things">
+			<div id="things">
 				__THINGS__
 			</div>
+			<iframe id="operation-response" name="operation-response">
+			</iframe>
 		</div>
 	</body>
 </html> 

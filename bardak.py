@@ -139,7 +139,11 @@ class Server(BaseHTTPRequestHandler):
                     )
                 break
 
-        return self._serve_index()
+        #return self._serve_index()
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain")
+        self.end_headers()
+        self.wfile.write(b'Updated successfully.')
     
     def _delete_thing(self):
         thing = self.path.lstrip('/delete').rstrip('/')
@@ -149,12 +153,21 @@ class Server(BaseHTTPRequestHandler):
                     path,
                     Path('trash') / path.name
                     )
-            return self._serve_index()
+            #return self._serve_index()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain")
+            self.end_headers()
+            self.wfile.write(b'Deleted successfully.')
         except:
             self.send_response(400)
             self.send_header("Content-Type", "text/plain")
             self.end_headers()
             self.wfile.write(b'Error.')
+
+    def _303(self, url):
+        self.send_response(303)
+        self.send_header('Location', url)
+        self.end_headers()
 
 
 if __name__ == "__main__":
