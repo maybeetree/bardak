@@ -25,6 +25,9 @@ function loadImage(elem) {
 
 	button.style.display = "none";
 	var clone = templ.content.cloneNode(true);
+
+	clone.children[0].src = clone.children[0].alt;
+
 	elem.appendChild(clone);
 }
 	</script>
