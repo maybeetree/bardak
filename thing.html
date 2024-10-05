@@ -1,5 +1,10 @@
 <div class="thing">
-	<img class="thingimage" src="/__IMAGE__">
+	<div class="thingimage-wrap">
+		<template class="image-template">
+			<img class="thingimage" src="/__IMAGE__">
+		</template>
+		<button onclick="loadImage(this.parentNode);">Click to load image</button>
+	</div>
 	<form
 			action="/update/__ID__"
 			method="post"

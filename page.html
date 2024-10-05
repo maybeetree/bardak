@@ -17,6 +17,16 @@ function focusCommentBox() {
 		100
 		);
 }
+
+function loadImage(elem) {
+	console.log(elem);
+	var templ = elem.children[0];
+	var button = elem.children[1];
+
+	button.style.display = "none";
+	var clone = templ.content.cloneNode(true);
+	elem.appendChild(clone);
+}
 	</script>
 
 	<style>
@@ -106,20 +116,29 @@ label {
 	/*aspect-ratio: 1 / 1;*/
 }
 
-.thingimage {
-	object-fit: contain;
+.thingimage-wrap {
 	flex-grow: 0;
 	flex-shrink: 0;
-	/*max-width: 50%;*/
 	width: 50%;
-	margin: 10px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
 }
 
 @media screen and (orientation:portrait) {
-	.thingimage {
+	.thingimage-wrap {
 		height: 150px;
 		width: auto;
 	}
+}
+
+.thingimage {
+	object-fit: contain;
+	width: 100%;
+	/*max-width: 50%;*/
+	margin: 10px;
 }
 
 .updatebox, .delbox {
