@@ -15,4 +15,6 @@ things/*
 trash/*
 !trash/.git-keep-me
 
+to-server.sh
+
 
