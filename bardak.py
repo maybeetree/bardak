@@ -1,12 +1,12 @@
-
+import re
 import html
 import shutil
 from pathlib import Path
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-page = Path('page.html').read_bytes()
-thing = Path('thing.html').read_bytes()
+html_page = Path('page.html').read_bytes()
+html_thing = Path('thing.html').read_bytes()
 
 def extract_filename(part):
     # Extract the filename from the part
@@ -24,11 +24,16 @@ def extract_file_content(part):
 
 class Server(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/':
-            return self._serve_index()
+        print(self.path)
 
-        elif self.path.startswith('/things'):
+        if len(self.path) > 100:
+            self._response(400, "Error.")
+
+        if self.path.startswith('/things'):
             return self._serve_image()
+
+        elif self.path.startswith('/'):
+            return self._serve_index()
 
     def _serve_image(self):
         self.send_response(200)
@@ -38,28 +43,80 @@ class Server(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", "max-age=31536000, immutable")
 
         self.end_headers()
+
         # Directory traversal vulnerability right here
+        # UPDATE actually maybe not
+        # try it:
+        # `curl 'localhost:8085/things/../../../../../../../../etc/man.conf'`
+        # Seems like BaseHTTPRequestHandler has something builtin for this?
+        # Or is it Curl that's programmed to be non-hostile?
+
         self.wfile.write(
             Path(self.path.lstrip('/')).read_bytes()
             )
 
     def _serve_index(self):
+
+        ## Get page ##
+
+        page_match = re.findall(r"\?page=(\d+)", self.path)
+        if len(page_match) == 0:
+            page = 1
+        elif len(page_match) > 1:
+            self._response(400, 'Error.')
+            return
+        elif len(page_match) == 1:
+            page_str = page_match[0]
+            if len(page_str) > 10:
+                self._response(400, 'Error.')
+                return
+            try:
+                page = int(page_str)
+            except:
+                self._response(400, 'Error.')
+                return
+            if page > 100000:
+                self._response(400, 'Error.')
+                return
+            elif page < 0:
+                self._response(400, 'Error.')
+                return
+        else:
+            assert False
+
+
+        PER_PAGE = 100
+
+        if page == 0:
+            window_start = 0
+            window_end = 99999999999
+        else:
+            window_start = (page - 1) * PER_PAGE
+            window_end = page * PER_PAGE
+
         self.send_response(200)
         self.send_header("Content-Type", "text/html")
         self.end_headers()
 
         images = tuple(
-            image
-            for image in Path('things').glob('*')
-            if image.suffix != '.txt'
-                and not image.name.startswith('.')
-            )
+            sorted(
+                filter(
+                    lambda x:
+                        x.stem.isnumeric()
+                        and x.suffix != '.txt'
+                        and not x.name.startswith('.'),
+                    Path('things').glob('*')
+                    ),
+                key=lambda x: int(x.stem),
+                reverse=True
+                )
+            )[window_start:window_end]
 
         self.wfile.write(
-            page.replace(
+            html_page.replace(
                 b'__THINGS__',
                 b''.join((
-                    thing
+                    html_thing
                         .replace(b'__IMAGE__', str(image).encode('ascii'))
                         .replace(
                             b'__COMMENT__',
@@ -71,7 +128,7 @@ class Server(BaseHTTPRequestHandler):
                             b'__ID__',
                             image.stem.encode('ascii')
                             )
-                    for image in sorted(images, reverse=True)
+                    for image in images
                     ))
                 )
             )
@@ -140,10 +197,7 @@ class Server(BaseHTTPRequestHandler):
                 break
 
         #return self._serve_index()
-        self.send_response(200)
-        self.send_header("Content-Type", "text/plain")
-        self.end_headers()
-        self.wfile.write(b'Updated successfully.')
+        self._response(200, "Updated successfully.")
     
     def _delete_thing(self):
         thing = self.path.lstrip('/delete').rstrip('/')
@@ -154,15 +208,15 @@ class Server(BaseHTTPRequestHandler):
                     Path('trash') / path.name
                     )
             #return self._serve_index()
-            self.send_response(200)
-            self.send_header("Content-Type", "text/plain")
-            self.end_headers()
-            self.wfile.write(b'Deleted successfully.')
+            self._response(200, "Deleted successfully.")
         except:
-            self.send_response(400)
-            self.send_header("Content-Type", "text/plain")
-            self.end_headers()
-            self.wfile.write(b'Error.')
+            self._response(400, "Error.")
+
+    def _response(self, code: int, message: str):
+        self.send_response(code)
+        self.send_header("Content-Type", "text/plain")
+        self.end_headers()
+        self.wfile.write(message.encode('utf8'))
 
     def _303(self, url):
         self.send_response(303)
