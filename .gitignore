@@ -83,5 +83,6 @@ trash/*
 !trash/.git-keep-me
 
 to-server.sh
+banner.html
 
 

@@ -47,6 +47,9 @@ body {
 #main {
 	width: 100%;
 	max-width: 1000px;
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
 }
 
 #form {
@@ -89,7 +92,6 @@ label {
 	width: 100%;
 	flex-direction: column;
 	gap: 20px;
-	margin-top: 50px;
 }
 
 .thing {
@@ -210,6 +212,9 @@ label {
 				<nav><a href="?page=0">Show all</a></nav>
 
 			</form>
+			<div id="banner">
+				__BANNER__
+			</div>
 			<div id="things">
 				__THINGS__
 			</div>

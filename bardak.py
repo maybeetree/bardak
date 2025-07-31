@@ -5,7 +5,12 @@ from pathlib import Path
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+if Path('banner.html').exists():
+    banner = Path('banner.html').read_bytes()
+else:
+    banner = Path('banner.sample.html').read_bytes()
 html_page = Path('page.html').read_bytes()
+html_page_full = html_page.replace(b'__BANNER__', banner)
 html_thing = Path('thing.html').read_bytes()
 
 def extract_filename(part):
@@ -113,7 +118,7 @@ class Server(BaseHTTPRequestHandler):
             )[window_start:window_end]
 
         self.wfile.write(
-            html_page.replace(
+            html_page_full.replace(
                 b'__THINGS__',
                 b''.join((
                     html_thing
