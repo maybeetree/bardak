@@ -122,7 +122,7 @@ class Server(BaseHTTPRequestHandler):
                 b'__THINGS__',
                 b''.join((
                     html_thing
-                        .replace(b'__IMAGE__', str(image).encode('ascii'))
+                        .replace(b'__IMAGE__', str(image).lstrip('/').encode('ascii'))
                         .replace(
                             b'__COMMENT__',
                             html.escape(
